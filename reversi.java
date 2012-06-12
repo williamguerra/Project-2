@@ -2,6 +2,7 @@ import java.util.*;
 
 class reversi {
 	
+	// comment
 	public enum Piece {
 		EMPTY(" "), WHITE("O"), BLACK("@");
 		private Piece(String name) {
