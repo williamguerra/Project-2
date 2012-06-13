@@ -294,3 +294,13 @@ class reversi {
 		System.out.println("Goodbye!");
 	}
 }
+<<<<<<< HEAD
+=======
+
+//what happens to this?
+
+// * end comment * =D
+// * test * //
+
+// removed the hello line /
+>>>>>>> master
