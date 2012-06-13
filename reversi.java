@@ -183,5 +183,7 @@ class reversi {
 	}
 }
 
+//what happens to this?
+
 // * end comment * =D
 // * test * //
