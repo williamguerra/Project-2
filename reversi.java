@@ -9,9 +9,20 @@ class reversi {
 		private Piece(String name) {
 			this.name = name;
 		}
+		// toString override
 		private final String name;
 		public String toString() {
 			return name;
+		}
+		// 
+		public Piece getOpposite() {
+			if (this == Piece.WHITE) {
+				return Piece.BLACK;
+			} else if (this == Piece.BLACK) {
+				return Piece.WHITE;
+			} else {
+				return Piece.EMPTY;
+			}
 		}
 	}
 	
@@ -160,15 +171,23 @@ class reversi {
 	
 	public static void move(int column, int row) {
 		// if valid move...
-		// if isValidMove(column, row) {
+		if (isValidMove(column, row)) {
 			board[column][row] = white;
-		// } else {
-			// System.out.println("Invalid Move");
-			// maybe also print a reason why
-		// }
+		} else {
+			System.out.println("Invalid Move");
+			//maybe also print a reason why
+		}
 		
 		// print updated board;
 		printBoard();
+	}
+	
+	public static boolean isValidMove(int column, int row) {
+		Piece p = Piece.WHITE;
+		int i = 1, j = 1;
+		if (board[column+i][row] == p.getOpposite()) // East side
+			return true;
+		else return false;
 	}
 	
 	public static void main(String args[]) {
@@ -182,8 +201,3 @@ class reversi {
 		System.out.println("Goodbye!");
 	}
 }
-
-//what happens to this?
-
-// * end comment * =D
-// * test * //
