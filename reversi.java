@@ -65,10 +65,12 @@ class reversi {
 		}
 		
 		// except for center four squares
-		board[3][3] = white;
+		board[2][5] = black;
 		board[3][4] = black;
 		board[4][3] = black;
-		board[4][4] = white;
+		board[5][2] = white;
+		
+		
 	}
 	
 	public static void printBoard() {
@@ -186,7 +188,7 @@ class reversi {
 	public static void move(int column, int row) {
 		// if valid move...
 		if (isValidMove(column, row)) {
-			board[column][row] = white;
+			board[column][row] = white; // TODO: player
 		} else {
 			System.out.println("Try again");
 			//maybe also print a reason why
@@ -197,14 +199,10 @@ class reversi {
 	}
 	
 	public static boolean checkNeighbors(int column, int row) {		
-		int i = 1, j = 1;
+		int i = 1;
 		Piece p = Piece.WHITE; // TODO: color of current player
 		boolean anyValid = false;
 		
-		if (board[column][row] != Piece.EMPTY) {
-			System.out.println("Space (" + alpha[column] + "," + (row+1) + ") is not empty");
-			return false;
-		}
 		if (isInBounds(column, row-i)) { // North Side
 			if(board[column][row-i] == p.getOpposite()) {
 				System.out.println("North Side");
@@ -213,7 +211,7 @@ class reversi {
 					if (board[column][row-i] == p.getOpposite()) {
 						i++;
 					} else if (board[column][row-i] == p.getColor()) {
-						// TODO: change pieces
+						flipPieces(column,column,row,row-i);
 						anyValid = true;
 						break;
 					} else { break; }
@@ -228,7 +226,7 @@ class reversi {
 					if (board[column+i][row] == p.getOpposite()) {
 						i++;
 					} else if (board[column+i][row] == p.getColor()) {
-						// TODO: change pieces
+						flipPieces(column,column+i,row,row);
 						anyValid = true;
 						break;
 					} else { break; }
@@ -243,7 +241,7 @@ class reversi {
 					if (board[column][row+i] == p.getOpposite()) {
 						i++;
 					} else if (board[column][row+i] == p.getColor()) {
-						// TODO: change pieces
+						flipPieces(column,column,row,row+i);
 						anyValid = true;
 						break;
 					} else { break; }
@@ -258,7 +256,74 @@ class reversi {
 					if (board[column-i][row] == p.getOpposite()) {
 						i++;
 					} else if (board[column-i][row] == p.getColor()) {
-						// TODO: change pieces
+						flipPieces(column,column-i,row,row);
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		}
+		return anyValid;
+	}
+	
+	public static boolean checkDiagonals(int column, int row) {
+		int i = 1;
+		Piece p = Piece.WHITE; // TODO: color of current player
+		boolean anyValid = false;
+		if (isInBounds(column+i, row-i)) { // Northeast Side
+			if(board[column+i][row-i] == p.getOpposite()) {
+				System.out.println("Northeast");
+				i++; // neighbor is opposite
+				while(isInBounds(column+i, row-i)) {
+					if (board[column+i][row-i] == p.getOpposite()) {
+						i++;
+					} else if (board[column+i][row-i] == p.getColor()) {
+						flipPieces(column,column+i,row,row-i);
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		}
+		if (isInBounds(column+i, row+i)) { // Southeast Side
+			if(board[column+i][row+i] == p.getOpposite()) {
+				System.out.println("Southeast");
+				i++; // neighbor is opposite
+				while(isInBounds(column+i, row+i)) {
+					if (board[column+i][row+i] == p.getOpposite()) {
+						i++;
+					} else if (board[column+i][row+i] == p.getColor()) {
+						flipPieces(column,column+i,row,row+i);
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		}
+		if (isInBounds(column-i, row+i)) { // Southwest Side
+			if(board[column-i][row+i] == p.getOpposite()) {
+				System.out.println("Southwest");
+				i++; // neighbor is opposite
+				while(isInBounds(column-i, row+i)) {
+					if (board[column+i][row-i] == p.getOpposite()) {
+						i++;
+					} else if (board[column+i][row-i] == p.getColor()) {
+						flipPieces(column,column+i,row,row-i);
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		}
+		if (isInBounds(column-i, row-i)) { // Northwest Side
+			if(board[column-i][row-i] == p.getOpposite()) {
+				System.out.println("Northwest");
+				i++; // neighbor is opposite
+				while(isInBounds(column-i, row-i)) {
+					if (board[column-i][row-i] == p.getOpposite()) {
+						i++;
+					} else if (board[column-i][row-i] == p.getColor()) {
+						flipPieces(column,column-i,row,row+i);
 						anyValid = true;
 						break;
 					} else { break; }
@@ -269,7 +334,10 @@ class reversi {
 	}
 	
 	public static boolean isValidMove(int column, int row) { 
-		return checkNeighbors(column, row);
+		if (board[column][row] != Piece.EMPTY) {
+			System.out.println("Space (" + alpha[column] + "," + (row+1) + ") is not empty");
+			return false;
+		} else { return checkNeighbors(column, row) || checkDiagonals(column, row); }
 	}
 	
 	public static boolean isInBounds(int column, int row) {
@@ -282,6 +350,52 @@ class reversi {
 			return true; 
 		}
 	}		
+	
+	public static void flipPieces(int startCol, int endCol, int startRow, int endRow) {
+		int temp;
+		if (startCol == endCol) {
+			if (startRow > endRow) {
+				temp = startRow;
+				startRow = endRow;
+				endRow = temp;
+			}
+			System.out.println(":" + (startRow+1) + " -> " + endRow);
+			for(int i=(startRow+1); i<endRow; i++) {
+				board[startCol][i] = board[startCol][i].getOpposite();
+			}
+		} else if (startRow == endRow) {
+			if (startCol > endCol) {
+				temp = startCol;
+				startCol = endCol;
+				endCol = temp;
+			}
+			for(int i=(startCol+1); i<endCol; i++) {
+				board[i][startRow] = board[i][startRow].getOpposite();
+			}
+		} else {
+			if (startRow > endRow) {
+				temp = startRow;
+				startRow = endRow;
+				endRow = temp;
+			}if (startCol > endCol) {
+				temp = startCol;
+				startCol = endCol;
+				endCol = temp;
+			}
+			
+			System.out.println("StartCol: " + startCol);
+			System.out.println("endCol: " + endCol);
+			System.out.println("startRow: " + startRow);
+			System.out.println("endRowl: " + endRow);
+			
+			int j=(startRow+1);
+			for(int i=(startCol+1); i<endCol; i++, j++) {
+				board[i][j] = board[i][j].getOpposite();
+				j++;
+			}
+		}
+	}
+	
 	
 	public static void main(String args[]) {
 		initializeBoard();
