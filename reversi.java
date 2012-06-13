@@ -184,3 +184,4 @@ class reversi {
 }
 
 // * end comment * =D
+// * test * //
