@@ -182,3 +182,6 @@ class reversi {
 		System.out.println("Goodbye!");
 	}
 }
+
+// * end comment * =D
+// * another end comment * =)
