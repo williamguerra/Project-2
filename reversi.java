@@ -188,4 +188,4 @@ class reversi {
 // * end comment * =D
 // * test * //
 
-// hello this is another added line =)
+// removed the hello line
