@@ -219,7 +219,8 @@ class reversi {
 					} else { break; }
 				}
 			}
-		} else if (isInBounds(column+i, row)) { // East Side
+		}
+		if (isInBounds(column+i, row)) { // East Side
 			if(board[column+i][row] == p.getOpposite()) {
 				System.out.println("East Side");
 				i++;
@@ -233,7 +234,8 @@ class reversi {
 					} else { break; }
 				}
 			}
-		} else if (isInBounds(column, row+i)) { // South Side
+		}
+		if (isInBounds(column, row+i)) { // South Side
 			if(board[column][row+i] == p.getOpposite()) {
 				System.out.println("South Side");
 				i++;
@@ -247,8 +249,8 @@ class reversi {
 					} else { break; }
 				}
 			}
-		} else if (isInBounds(column, row+i)) { // West Side
-			System.out.println("West Side Valid");
+		}
+		if (isInBounds(column-i, row)) { // West Side
 			if(board[column-i][row] == p.getOpposite()) {
 				System.out.println("West Side");
 				i++;
@@ -262,9 +264,6 @@ class reversi {
 					} else { break; }
 				}
 			}
-		} else { 
-			System.out.println(":Last False:");
-			return false;
 		}
 		return anyValid;
 	}
@@ -280,7 +279,6 @@ class reversi {
 			row < 0 ) {
 				return false;
 		} else { 
-			System.out.println("In Bounds");
 			return true; 
 		}
 	}		
