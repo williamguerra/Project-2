@@ -184,4 +184,3 @@ class reversi {
 }
 
 // * end comment * =D
-// * another end comment * =)
