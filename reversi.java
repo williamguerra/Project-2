@@ -24,12 +24,24 @@ class reversi {
 				return Piece.EMPTY;
 			}
 		}
+		//
+		public Piece getColor() {
+			if (this == Piece.WHITE) {
+				return Piece.WHITE;
+			} else if (this == Piece.BLACK) {
+				return Piece.BLACK;
+			} else {
+				return Piece.EMPTY;
+			}
+		}
 	}
 	
 	// Piece objects
 	private final static Piece white = Piece.WHITE;
 	private final static Piece black = Piece.BLACK;
 	private final static Piece empty = Piece.EMPTY;
+	private final static Piece player1 = Piece.WHITE;
+	private final static Piece player2 = Piece.BLACK;
 	
 	// game board 
 	public static Piece[][] board = new Piece[8][8]; // 2d array of pieces
@@ -40,6 +52,8 @@ class reversi {
 	// other global variables
 	private static boolean gameOver = false; // true when game is quit
 	
+	// alphabetical char array
+	private final static char[] alpha = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
 	
 	// functions
 	public static void initializeBoard() {
@@ -59,7 +73,7 @@ class reversi {
 	
 	public static void printBoard() {
 		// clear screen
-		for(int i=0; i<50; i++) {
+		for(int i=0; i<2; i++) {
 			System.out.println("");
 		}
 		
@@ -174,7 +188,7 @@ class reversi {
 		if (isValidMove(column, row)) {
 			board[column][row] = white;
 		} else {
-			System.out.println("Invalid Move");
+			System.out.println("Try again");
 			//maybe also print a reason why
 		}
 		
@@ -182,17 +196,98 @@ class reversi {
 		printBoard();
 	}
 	
-	public static boolean isValidMove(int column, int row) {
-		Piece p = Piece.WHITE;
+	public static boolean checkNeighbors(int column, int row) {		
 		int i = 1, j = 1;
-		if (board[column+i][row] == p.getOpposite()) // East side
-			return true;
-		else return false;
+		Piece p = Piece.WHITE; // TODO: color of current player
+		boolean anyValid = false;
+		
+		if (board[column][row] != Piece.EMPTY) {
+			System.out.println("Space (" + alpha[column] + "," + (row+1) + ") is not empty");
+			return false;
+		}
+		if (isInBounds(column, row-i)) { // North Side
+			if(board[column][row-i] == p.getOpposite()) {
+				System.out.println("North Side");
+				i++; // neighbor is opposite
+				while(isInBounds(column, row-i)) {
+					if (board[column][row-i] == p.getOpposite()) {
+						i++;
+					} else if (board[column][row-i] == p.getColor()) {
+						// TODO: change pieces
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		} else if (isInBounds(column+i, row)) { // East Side
+			if(board[column+i][row] == p.getOpposite()) {
+				System.out.println("East Side");
+				i++;
+				while(isInBounds(column+i, row)) {
+					if (board[column+i][row] == p.getOpposite()) {
+						i++;
+					} else if (board[column+i][row] == p.getColor()) {
+						// TODO: change pieces
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		} else if (isInBounds(column, row+i)) { // South Side
+			if(board[column][row+i] == p.getOpposite()) {
+				System.out.println("South Side");
+				i++;
+				while(isInBounds(column, row+i)) {
+					if (board[column][row+i] == p.getOpposite()) {
+						i++;
+					} else if (board[column][row+i] == p.getColor()) {
+						// TODO: change pieces
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		} else if (isInBounds(column, row+i)) { // West Side
+			System.out.println("West Side Valid");
+			if(board[column-i][row] == p.getOpposite()) {
+				System.out.println("West Side");
+				i++;
+				while(isInBounds(column-i, row)) {
+					if (board[column-i][row] == p.getOpposite()) {
+						i++;
+					} else if (board[column-i][row] == p.getColor()) {
+						// TODO: change pieces
+						anyValid = true;
+						break;
+					} else { break; }
+				}
+			}
+		} else { 
+			System.out.println(":Last False:");
+			return false;
+		}
+		return anyValid;
 	}
+	
+	public static boolean isValidMove(int column, int row) { 
+		return checkNeighbors(column, row);
+	}
+	
+	public static boolean isInBounds(int column, int row) {
+		if (column > 7 ||
+			row > 7 ||
+			column < 0 ||
+			row < 0 ) {
+				return false;
+		} else { 
+			System.out.println("In Bounds");
+			return true; 
+		}
+	}		
 	
 	public static void main(String args[]) {
 		initializeBoard();
-		System.out.println("Board initialized.");
+		System.out.println("Board initialized. Player1 is White");
 		printBoard();
 		while (!gameOver) {
 			// loop until quit
