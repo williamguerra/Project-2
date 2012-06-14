@@ -65,10 +65,10 @@ class reversi {
 		}
 		
 		// except for center four squares
+		board[2][5] = black;
 		board[3][4] = black;
-		board[3][3] = white;
 		board[4][3] = black;
-		board[4][4] = white;
+		board[5][2] = white;
 		
 		
 	}
@@ -104,10 +104,10 @@ class reversi {
 		}
 	}
 	
-	public static void getInput(Piece player) {
+	public static void getInput() {
 		String input;
 		int row, column;
-		System.out.print("> ");
+		
 		input = scanner.next();
 		
 		if (input.equalsIgnoreCase("quit")) {
@@ -181,33 +181,36 @@ class reversi {
 		}
 		
 		// perform move
-		move(column, row, player);
+		move(column, row);
 		System.out.println("Column: " + column + "; Row: " + row);
 	}
 	
-	public static void move(int column, int row, Piece player) {
+	public static void move(int column, int row) {
 		// if valid move...
-		if (isValidMove(column, row, player)) {
-			board[column][row] = player.getColor();
-			printBoard();
+		if (isValidMove(column, row)) {
+			board[column][row] = white; // TODO: player
 		} else {
 			System.out.println("Try again");
-			
+			//maybe also print a reason why
 		}
+		
+		// print updated board;
+		printBoard();
 	}
 	
-	public static boolean checkNeighbors(int column, int row, Piece player) {		
+	public static boolean checkNeighbors(int column, int row) {		
 		int i = 1;
+		Piece p = Piece.WHITE; // TODO: color of current player
 		boolean anyValid = false;
 		
 		if (isInBounds(column, row-i)) { // North Side
-			if(board[column][row-i] == player.getOpposite()) {
+			if(board[column][row-i] == p.getOpposite()) {
 				System.out.println("North Side");
 				i++; // neighbor is opposite
 				while(isInBounds(column, row-i)) {
-					if (board[column][row-i] == player.getOpposite()) {
+					if (board[column][row-i] == p.getOpposite()) {
 						i++;
-					} else if (board[column][row-i] == player.getColor()) {
+					} else if (board[column][row-i] == p.getColor()) {
 						flipPieces(column,column,row,row-i);
 						anyValid = true;
 						break;
@@ -215,15 +218,14 @@ class reversi {
 				}
 			}
 		}
-		i = 1;
 		if (isInBounds(column+i, row)) { // East Side
-			if(board[column+i][row] == player.getOpposite()) {
+			if(board[column+i][row] == p.getOpposite()) {
 				System.out.println("East Side");
 				i++;
 				while(isInBounds(column+i, row)) {
-					if (board[column+i][row] == player.getOpposite()) {
+					if (board[column+i][row] == p.getOpposite()) {
 						i++;
-					} else if (board[column+i][row] == player.getColor()) {
+					} else if (board[column+i][row] == p.getColor()) {
 						flipPieces(column,column+i,row,row);
 						anyValid = true;
 						break;
@@ -231,15 +233,14 @@ class reversi {
 				}
 			}
 		}
-		i = 1;
 		if (isInBounds(column, row+i)) { // South Side
-			if(board[column][row+i] == player.getOpposite()) {
+			if(board[column][row+i] == p.getOpposite()) {
 				System.out.println("South Side");
 				i++;
 				while(isInBounds(column, row+i)) {
-					if (board[column][row+i] == player.getOpposite()) {
+					if (board[column][row+i] == p.getOpposite()) {
 						i++;
-					} else if (board[column][row+i] == player.getColor()) {
+					} else if (board[column][row+i] == p.getColor()) {
 						flipPieces(column,column,row,row+i);
 						anyValid = true;
 						break;
@@ -247,15 +248,14 @@ class reversi {
 				}
 			}
 		}
-		i = 1;
 		if (isInBounds(column-i, row)) { // West Side
-			if(board[column-i][row] == player.getOpposite()) {
+			if(board[column-i][row] == p.getOpposite()) {
 				System.out.println("West Side");
 				i++;
 				while(isInBounds(column-i, row)) {
-					if (board[column-i][row] == player.getOpposite()) {
+					if (board[column-i][row] == p.getOpposite()) {
 						i++;
-					} else if (board[column-i][row] == player.getColor()) {
+					} else if (board[column-i][row] == p.getColor()) {
 						flipPieces(column,column-i,row,row);
 						anyValid = true;
 						break;
@@ -266,18 +266,18 @@ class reversi {
 		return anyValid;
 	}
 	
-	public static boolean checkDiagonals(int column, int row, Piece player) {
+	public static boolean checkDiagonals(int column, int row) {
 		int i = 1;
 		Piece p = Piece.WHITE; // TODO: color of current player
 		boolean anyValid = false;
 		if (isInBounds(column+i, row-i)) { // Northeast Side
-			if(board[column+i][row-i] == player.getOpposite()) {
+			if(board[column+i][row-i] == p.getOpposite()) {
 				System.out.println("Northeast");
 				i++; // neighbor is opposite
 				while(isInBounds(column+i, row-i)) {
-					if (board[column+i][row-i] == player.getOpposite()) {
+					if (board[column+i][row-i] == p.getOpposite()) {
 						i++;
-					} else if (board[column+i][row-i] == player.getColor()) {
+					} else if (board[column+i][row-i] == p.getColor()) {
 						flipPieces(column,column+i,row,row-i);
 						anyValid = true;
 						break;
@@ -285,15 +285,14 @@ class reversi {
 				}
 			}
 		}
-		i = 1;
 		if (isInBounds(column+i, row+i)) { // Southeast Side
-			if(board[column+i][row+i] == player.getOpposite()) {
+			if(board[column+i][row+i] == p.getOpposite()) {
 				System.out.println("Southeast");
 				i++; // neighbor is opposite
 				while(isInBounds(column+i, row+i)) {
-					if (board[column+i][row+i] == player.getOpposite()) {
+					if (board[column+i][row+i] == p.getOpposite()) {
 						i++;
-					} else if (board[column+i][row+i] == player.getColor()) {
+					} else if (board[column+i][row+i] == p.getColor()) {
 						flipPieces(column,column+i,row,row+i);
 						anyValid = true;
 						break;
@@ -301,32 +300,30 @@ class reversi {
 				}
 			}
 		}
-		i = 1;
 		if (isInBounds(column-i, row+i)) { // Southwest Side
-			if(board[column-i][row+i] == player.getOpposite()) {
+			if(board[column-i][row+i] == p.getOpposite()) {
 				System.out.println("Southwest");
 				i++; // neighbor is opposite
 				while(isInBounds(column-i, row+i)) {
-					if (board[column-i][row+i] == player.getOpposite()) {
+					if (board[column+i][row-i] == p.getOpposite()) {
 						i++;
-					} else if (board[column-i][row+i] == player.getColor()) {
-						flipPieces(column,column-i,row,row+i);
+					} else if (board[column+i][row-i] == p.getColor()) {
+						flipPieces(column,column+i,row,row-i);
 						anyValid = true;
 						break;
 					} else { break; }
 				}
 			}
 		}
-		i = 1;
 		if (isInBounds(column-i, row-i)) { // Northwest Side
-			if(board[column-i][row-i] == player.getOpposite()) {
+			if(board[column-i][row-i] == p.getOpposite()) {
 				System.out.println("Northwest");
 				i++; // neighbor is opposite
 				while(isInBounds(column-i, row-i)) {
-					if (board[column-i][row-i] == player.getOpposite()) {
+					if (board[column-i][row-i] == p.getOpposite()) {
 						i++;
-					} else if (board[column-i][row-i] == player.getColor()) {
-						flipPieces(column,column-i,row,row-i);
+					} else if (board[column-i][row-i] == p.getColor()) {
+						flipPieces(column,column-i,row,row+i);
 						anyValid = true;
 						break;
 					} else { break; }
@@ -336,12 +333,11 @@ class reversi {
 		return anyValid;
 	}
 	
-	public static boolean isValidMove(int column, int row, Piece player) { 
-		boolean valid;
+	public static boolean isValidMove(int column, int row) { 
 		if (board[column][row] != Piece.EMPTY) {
 			System.out.println("Space (" + alpha[column] + "," + (row+1) + ") is not empty");
 			return false;
-		} else { return checkNeighbors(column, row, player) || checkDiagonals(column, row, player); }
+		} else { return checkNeighbors(column, row) || checkDiagonals(column, row); }
 	}
 	
 	public static boolean isInBounds(int column, int row) {
@@ -377,63 +373,37 @@ class reversi {
 				board[i][startRow] = board[i][startRow].getOpposite();
 			}
 		} else {
-			boolean rowAsc = false, colAsc = false;
-			if (startRow < endRow) {
-				rowAsc = true;
-			}if (startCol < endCol) {
-				colAsc = true;
+			if (startRow > endRow) {
+				temp = startRow;
+				startRow = endRow;
+				endRow = temp;
+			}if (startCol > endCol) {
+				temp = startCol;
+				startCol = endCol;
+				endCol = temp;
 			}
 			
-			if (colAsc && rowAsc) {
-				int j = (startRow+1);
-				for(int i=(startCol+1); i<(endCol); i++, j++) {
-					System.out.println("__ i: " + i + " .. j: " + j);
-					board[i][j] = board[i][j].getOpposite();
-				}
-			} else if (colAsc && !rowAsc) {
-				int j = (startRow-1);
-				for(int i=(startCol+1); i<(endCol); i++, j--) {
-					System.out.println("_! i: " + i + " .. j: " + j);
-					board[i][j] = board[i][j].getOpposite();
-				}
-			} else if (!colAsc && rowAsc) {
-				int j = (startRow+1);
-				for(int i=(startCol-1); i>(endCol); i++, j--) {
-					System.out.println("!_ i: " + i + " .. j: " + j);
-					board[i][j] = board[i][j].getOpposite();
-				}
-			} else if (!colAsc && !rowAsc) {
-				int j = (startRow-1);
-				for(int i=(startCol-1); i>(endCol); i--, j--) {
-					System.out.println("!! i: " + i + " .. j: " + j);
-					board[i][j] = board[i][j].getOpposite();
-				}
-			}
-			
-			System.out.println("startCol: " + startCol);
-			System.out.println("endCol:   " + endCol);
+			System.out.println("StartCol: " + startCol);
+			System.out.println("endCol: " + endCol);
 			System.out.println("startRow: " + startRow);
-			System.out.println("endRow:   " + endRow);
+			System.out.println("endRowl: " + endRow);
+			
+			int j=(startRow+1);
+			for(int i=(startCol+1); i<endCol; i++, j++) {
+				board[i][j] = board[i][j].getOpposite();
+				j++;
+			}
 		}
 	}
 	
-
-// main	
+	
 	public static void main(String args[]) {
 		initializeBoard();
-		System.out.println("Welcome.\nPlayer 1 color is white.\n");
+		System.out.println("Board initialized. Player1 is White");
 		printBoard();
-		boolean player1Turn = true;
 		while (!gameOver) {
-			if(player1Turn) {
-				System.out.println("Player 1's turn...");
-				getInput(player1);
-				player1Turn = false;
-			} else {
-				System.out.println("Player 2's turn...");
-				getInput(player2); // switch to player two
-				player1Turn = true;
-			}
+			// loop until quit
+			getInput();
 		}
 		System.out.println("Goodbye!");
 	}
